@@ -28,7 +28,11 @@ end
 
 local function unsplashRequest()
     local user_agent_str = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"
-    obj.pic_url = hs.execute([[ /usr/bin/curl 'https://source.unsplash.com/1600x900/?nature' |  perl -ne ' print "$1" if /href="([^"]+)"/ ' ]])
+    local res = hs.screen.mainScreen():currentMode()
+    local categories = {'nature','skyline'}
+    local category = categories[math.random(#categories)]
+    local source_uri = 'https://source.unsplash.com/'.. res.w .. 'x' .. res.h .. '/?'.. category
+    obj.pic_url = hs.execute([[ /usr/bin/curl ]] .. source_uri .. [[ |  perl -ne ' print "$1" if /href="([^"]+)"/ ' ]])
     if obj.last_pic ~= obj.pic_url then
         if obj.task then
             obj.task:terminate()
